@@ -5,7 +5,8 @@ import { getSession } from 'next-auth/react';
 // Função para obter o ID do usuário autenticado
 const getUserId = async (): Promise<string | null> => {
   const session = await getSession();
-  return session?.user?.id || null;
+  const userId = (session?.user as { id: string })?.id;
+  return userId;
 };
 
 // Função para adicionar um item ao documento do usuário

@@ -5,7 +5,7 @@ import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -48,7 +48,6 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       session.user = {
-        ...session.user,
         id: token.sub as string,
       };
       return session;
@@ -71,7 +70,6 @@ const authOptions: NextAuthOptions = {
   },
 } satisfies NextAuthOptions;
 
-// Corrigido: Não exporte `authOptions` diretamente
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

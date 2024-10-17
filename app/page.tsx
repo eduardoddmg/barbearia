@@ -17,9 +17,17 @@ const Page = () => {
     }
   }, [status, router]);
 
+  // Quando a sessão está carregando
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
+
+  // Se a sessão não estiver autenticada, redireciona para a página de login
+  if (status === 'unauthenticated') {
+    return <p>Acesso negado</p>;
+  }
+
+  console.log(session?.user);
 
   return (
     <div className="m-10">

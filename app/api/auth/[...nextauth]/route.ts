@@ -52,6 +52,7 @@ const authOptions: NextAuthOptions = {
         if (token.sub) {
           session.user = {
             id: token.sub as string,
+            email: session.user.email,
           };
         }
       }

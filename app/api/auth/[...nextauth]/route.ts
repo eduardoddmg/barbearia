@@ -1,4 +1,5 @@
 // app/api/auth/[...nextauth]/route.ts
+import 'next-auth/jwt';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { auth } from '@/firebase';

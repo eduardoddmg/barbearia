@@ -5,10 +5,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AddClient } from './dialog';
+import { useFirebase } from '@/hooks/use-firebase';
 
 const Page = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { data: items, fetchData } = useFirebase();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -30,10 +32,9 @@ const Page = () => {
   console.log(session?.user);
 
   return (
-    <div className="m-10">
-      <p>Seja bem-vindo, {session?.user?.email}</p>
-      <AddClient />
-      <DataTableDemo />
+    <div>
+      <AddClient fetchData={fetchData} />
+      <DataTableDemo data={items} />
     </div>
   );
 };

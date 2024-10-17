@@ -32,16 +32,15 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getAllItems } from '@/firebase'; // Importa o getAllItems do Firebase
 
-// Definição do tipo Payment com nome, para uso com Firestore
-export type Payment = {
+// Definição do tipo Cliente com nome, para uso com Firestore
+export type Cliente = {
   nome: string;
   whatsapp: string;
   data: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Cliente>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -105,8 +104,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export function DataTableDemo() {
-  const [data, setData] = React.useState<Payment[]>([]);
+export function DataTableDemo({ data }: { data: Cliente[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -114,28 +112,6 @@ export function DataTableDemo() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
-  // Carregar dados do Firestore quando o componente montar
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const items = await getAllItems('items');
-        const payments = items.map((item) => ({
-          // Mapeie os campos corretamente
-          nome: item.nome,
-          whatsapp: item.whatsapp,
-          data: item.data,
-          // Adicione outros campos conforme necessário
-        })) as Payment[];
-
-        setData(payments);
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const table = useReactTable({
     data,

@@ -3,6 +3,9 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Providers from './providers';
+import { ThemeProvider } from '@/components/theme/theme-provider';
+import { ModeToggle } from '@/components/theme/mode-toggle';
+import { Navbar } from '@/components/navbar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -30,7 +33,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <div className="p-4">{children}</div>
+          </ThemeProvider>
+        </Providers>
         <Toaster />
       </body>
     </html>

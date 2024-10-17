@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { addItem } from '@/firebase';
+import { useFirebase } from '@/hooks/use-firebase';
 import { useToast } from '@/hooks/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
@@ -30,7 +31,7 @@ const FormSchema = z.object({
   whatsapp: z.string().min(9, 'O número do Whatsapp é inválido'),
   data: z.string(),
 });
-export function AddClient() {
+export function AddClient({ fetchData }: { fetchData: () => void }) {
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);
@@ -54,6 +55,7 @@ export function AddClient() {
         className: 'bg-green-500 text-white',
       });
       form.reset();
+      fetchData(); // ATUALIZA A LISTA DE CLIENTES AUTOMATICAMENTE
     } catch (error) {
       console.log(error);
       toast({

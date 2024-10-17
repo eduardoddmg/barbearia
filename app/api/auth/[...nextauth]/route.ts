@@ -5,7 +5,7 @@ import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -48,6 +48,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       session.user = {
+        ...session.user,
         id: token.sub as string,
       };
       return session;
@@ -68,8 +69,9 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 30 * 24 * 60 * 60, // Token JWT expira após 30 dias
   },
-};
+} satisfies NextAuthOptions;
 
+// Corrigido: Não exporte `authOptions` diretamente
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

@@ -1,6 +1,5 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
+'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -12,6 +11,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { withMask } from 'use-mask-input';
+import { useEffect } from 'react';
+import { DocumentData } from 'firebase/firestore';
+
 const formSchema = z.object({
   nome: z.string().min(1).max(255),
   data: z.string().min(1).max(255),
@@ -19,20 +25,25 @@ const formSchema = z.object({
   telefone: z.string().min(1).max(255),
 });
 
-export function FormularioCliente() {
+interface ClientFormProps {
+  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  defaultValues?: DocumentData;
+}
+
+export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nome: 'string',
-      data: 'string',
-      horario: 'string',
-      telefone: 'string',
+      nome: '',
+      data: '',
+      horario: '',
+      telefone: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  useEffect(() => {
+    form.reset(defaultValues);
+  }, [defaultValues, form]);
 
   return (
     <Form {...form}>
@@ -63,7 +74,11 @@ export function FormularioCliente() {
             <FormItem>
               <FormLabel>Data</FormLabel>
               <FormControl>
-                <Input placeholder="dd/mm/aaaa" {...field} />
+                <Input
+                  {...field}
+                  placeholder="dd/mm/aaaa"
+                  ref={withMask('99/99/9999')}
+                />
               </FormControl>
               <FormDescription>Insira a data do agendamento</FormDescription>
               <FormMessage />
@@ -78,7 +93,7 @@ export function FormularioCliente() {
             <FormItem>
               <FormLabel>Horário</FormLabel>
               <FormControl>
-                <Input placeholder="xx:xx" {...field} />
+                <Input {...field} placeholder="hh:mm" ref={withMask('99:99')} />
               </FormControl>
               <FormDescription>Insira o horário do agendamento</FormDescription>
               <FormMessage />
@@ -93,9 +108,13 @@ export function FormularioCliente() {
             <FormItem>
               <FormLabel>Telefone</FormLabel>
               <FormControl>
-                <Input placeholder="Placeholder" {...field} />
+                <Input
+                  {...field}
+                  placeholder="(99) 9 9999-9999"
+                  ref={withMask('(99) 9 9999-9999')}
+                />
               </FormControl>
-              <FormDescription>Description</FormDescription>
+              <FormDescription>Insira o telefone do cliente</FormDescription>
               <FormMessage />
             </FormItem>
           )}

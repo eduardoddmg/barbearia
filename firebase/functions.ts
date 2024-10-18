@@ -3,6 +3,11 @@ import { v4 as uuidv4 } from 'uuid'; // Importa a função para gerar UUID
 import { db } from './config';
 import { getSession } from 'next-auth/react';
 
+// Interface do item
+interface Item {
+  id: string;
+}
+
 // Função para obter o ID do usuário autenticado
 const getUserId = async (): Promise<string | null> => {
   const session = await getSession();
@@ -102,7 +107,7 @@ export const editItem = async (
 
     if (userDoc.exists()) {
       const currentData = userDoc.data().data || [];
-      const updatedData = currentData.map((item) =>
+      const updatedData = currentData.map((item: Item) =>
         item.id === itemId ? { ...item, ...newItemData } : item
       ); // Atualiza o item correspondente pelo id
 
@@ -135,7 +140,9 @@ export const removeOneItem = async (
 
     if (userDoc.exists()) {
       const currentData = userDoc.data().data || [];
-      const updatedData = currentData.filter((item: any) => item.id !== itemId); // Remove o item pelo id
+      const updatedData = currentData.filter(
+        (item: Item) => item.id !== itemId
+      ); // Remove o item pelo id
 
       await setDoc(userDocRef, { data: updatedData }, { merge: true });
       console.log(
@@ -167,7 +174,7 @@ export const removeBatchItems = async (
     if (userDoc.exists()) {
       const currentData = userDoc.data().data || [];
       const updatedData = currentData.filter(
-        (item: any) => !itemIds.includes(item.id)
+        (item: Item) => !itemIds.includes(item.id)
       ); // Remove itens que tenham id dentro de itemIds
 
       await setDoc(userDocRef, { data: updatedData }, { merge: true });

@@ -1,5 +1,6 @@
 
 # Sistema de Agendamento de Cortes - Barbearia
+![image](https://github.com/user-attachments/assets/cca83402-a5d5-4840-bc1c-5eca1b48ef57)
 
 Este é um sistema de agendamento de cortes de cabelo desenvolvido para barbearias. O sistema permite que os barbeiros façam o agendamento de cortes de cabelo de seus clientes de maneira prática e eficiente. O projeto está em desenvolvimento e foi criado utilizando **Next.js**, **TypeScript**, **NextAuth**, **shadcn/ui** e **Firebase**.
 

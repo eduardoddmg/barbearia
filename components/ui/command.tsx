@@ -23,9 +23,8 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
-interface CommandDialogProps extends DialogProps {}
-
-const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+// Remover a interface CommandDialogProps e usar DialogProps diretamente
+const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
       <DialogContent className="overflow-hidden p-0">
@@ -53,7 +52,6 @@ const CommandInput = React.forwardRef<
     />
   </div>
 ));
-
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
 const CommandList = React.forwardRef<
@@ -66,7 +64,6 @@ const CommandList = React.forwardRef<
     {...props}
   />
 ));
-
 CommandList.displayName = CommandPrimitive.List.displayName;
 
 const CommandEmpty = React.forwardRef<
@@ -79,7 +76,6 @@ const CommandEmpty = React.forwardRef<
     {...props}
   />
 ));
-
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
 const CommandGroup = React.forwardRef<
@@ -95,7 +91,6 @@ const CommandGroup = React.forwardRef<
     {...props}
   />
 ));
-
 CommandGroup.displayName = CommandPrimitive.Group.displayName;
 
 const CommandSeparator = React.forwardRef<
@@ -123,7 +118,6 @@ const CommandItem = React.forwardRef<
     {...props}
   />
 ));
-
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 const CommandShortcut = ({

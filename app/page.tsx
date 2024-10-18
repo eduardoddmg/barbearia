@@ -3,15 +3,18 @@
 import { DataTableDemo } from './table';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { AddClient } from './dialog';
+import { useEffect, useState } from 'react';
+import { AddClient } from './dialog-add';
 import { useFirebase } from '@/hooks/use-firebase';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 
 const Page = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { status } = useSession();
   const { data: items, fetchData } = useFirebase();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const router = useRouter();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -30,13 +33,17 @@ const Page = () => {
     return <p>Acesso negado</p>;
   }
 
-  console.log(session?.user);
-
   return (
     <div>
       <Button onClick={() => fetchData()}>Atualizar</Button>
       <AddClient fetchData={fetchData} />
       <DataTableDemo data={items} fetchData={fetchData} />
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={setDate}
+        className="rounded-md border shadow"
+      />
     </div>
   );
 };

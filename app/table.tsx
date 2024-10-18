@@ -42,6 +42,7 @@ import {
 } from '@/components/ui/table';
 import { removeOneItem } from '@/firebase';
 import { DocumentData } from 'firebase/firestore';
+import { EditClient } from './dialog-edit';
 
 export type Cliente = {
   id: string;
@@ -58,6 +59,9 @@ export function DataTableDemo({
   data: Cliente[] | DocumentData[];
   fetchData: () => void;
 }) {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [id, setId] = React.useState<string>('');
+
   const columns: ColumnDef<Cliente | DocumentData>[] = [
     {
       id: 'select',
@@ -158,7 +162,10 @@ export function DataTableDemo({
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(cliente.id)}
+                onClick={() => {
+                  setId(cliente.id);
+                  setOpen(true);
+                }}
               >
                 <Pen className="text-orange-400" />
                 Editar
@@ -318,6 +325,7 @@ export function DataTableDemo({
           </Button>
         </div>
       </div>
+      <EditClient id={id} fetchData={fetchData} open={open} setOpen={setOpen} />
     </div>
   );
 }

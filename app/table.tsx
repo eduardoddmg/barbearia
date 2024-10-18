@@ -13,7 +13,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ChevronDown } from 'lucide-react';
+import {
+  ArrowUpDown,
+  ChevronDown,
+  MoreHorizontal,
+  Pen,
+  Trash,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,6 +27,8 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
@@ -32,79 +40,145 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { removeOneItem } from '@/firebase';
+import { DocumentData } from 'firebase/firestore';
 
-// Definição do tipo Cliente com nome, para uso com Firestore
 export type Cliente = {
+  id: string;
   nome: string;
-  whatsapp: string;
+  telefone: string;
   data: string;
+  hora: string;
 };
 
-export const columns: ColumnDef<Cliente>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'nome',
-    cell: ({ row }) => <div className="capitalize">{row.getValue('nome')}</div>,
-    header: ({ column }) => (
-      <Button
-        className="p-0"
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-      >
-        Nome
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  {
-    accessorKey: 'whatsapp',
-    cell: ({ row }) => row.getValue('whatsapp'),
-    header: 'Whatsapp',
-  },
-  {
-    accessorKey: 'data',
-    header: 'Data',
-    cell: ({ row }) => {
-      const rawDate: string = row.getValue('data');
-      const date = new Date(rawDate);
-      if (isNaN(date.getTime())) {
-        return 'Data inválida';
-      }
-      const formattedDate = new Intl.DateTimeFormat('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date);
-
-      return <span>{formattedDate}</span>;
+export function DataTableDemo({
+  data,
+  fetchData,
+}: {
+  data: Cliente[] | DocumentData[];
+  fetchData: () => void;
+}) {
+  const columns: ColumnDef<Cliente | DocumentData>[] = [
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-];
+    {
+      accessorKey: 'nome',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Nome
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="">{row.getValue('nome')}</div>,
+    },
+    {
+      accessorKey: 'telefone',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Telefone
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="">{row.getValue('telefone')}</div>,
+    },
+    {
+      accessorKey: 'data',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Data
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="">{row.getValue('data')}</div>,
+    },
+    {
+      accessorKey: 'horario',
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          >
+            Hora
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => <div className="ml-5">{row.getValue('horario')}</div>,
+    },
+    {
+      id: 'actions',
+      enableHiding: false,
+      cell: ({ row }) => {
+        const cliente = row.original;
 
-export function DataTableDemo({ data }: { data: Cliente[] }) {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Abrir menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(cliente.id)}
+              >
+                <Pen className="text-orange-400" />
+                Editar
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={async () => {
+                  await removeOneItem('items', cliente.id);
+                  fetchData();
+                }}
+              >
+                <Trash className="text-red-500" />
+                Remover
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -132,18 +206,11 @@ export function DataTableDemo({ data }: { data: Cliente[] }) {
     },
   });
 
-  const handleSelectedRows = () => {
-    const selectedRows = table
-      .getSelectedRowModel()
-      .rows.map((row) => row.original);
-    console.log('Selected Rows:', selectedRows);
-  };
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter by nome..."
+          placeholder="Filtre pelo nome ..."
           value={(table.getColumn('nome')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('nome')?.setFilterValue(event.target.value)
@@ -228,9 +295,6 @@ export function DataTableDemo({ data }: { data: Cliente[] }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <Button variant="outline" onClick={handleSelectedRows}>
-          Log Selected Rows
-        </Button>
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.

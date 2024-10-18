@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { AddClient } from './dialog';
 import { useFirebase } from '@/hooks/use-firebase';
+import { Button } from '@/components/ui/button';
 
 const Page = () => {
   const { data: session, status } = useSession();
@@ -33,8 +34,9 @@ const Page = () => {
 
   return (
     <div>
+      <Button onClick={() => fetchData()}>Atualizar</Button>
       <AddClient fetchData={fetchData} />
-      <DataTableDemo data={items} />
+      <DataTableDemo data={items} fetchData={fetchData} />
     </div>
   );
 };

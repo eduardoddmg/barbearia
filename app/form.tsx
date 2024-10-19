@@ -11,6 +11,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -18,11 +25,13 @@ import { withMask } from 'use-mask-input';
 import { useEffect } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
+// Esquema de validação do formulário
 const formSchema = z.object({
-  nome: z.string().min(1).max(255),
-  data: z.string().min(1).max(255),
-  horario: z.string().min(1).max(255),
-  telefone: z.string().min(1).max(255),
+  nome: z.string().min(1, 'O nome é obrigatório').max(255),
+  data: z.string().min(1, 'A data é obrigatória').max(255),
+  horario: z.string().min(1, 'O horário é obrigatório').max(255),
+  telefone: z.string().min(1, 'O telefone é obrigatório').max(255),
+  tipoServico: z.string().min(1, 'Selecione o tipo de serviço'),
 });
 
 interface ClientFormProps {
@@ -38,6 +47,7 @@ export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
       data: '',
       horario: '',
       telefone: '',
+      tipoServico: '',
     },
   });
 
@@ -119,7 +129,38 @@ export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        <FormField
+          control={form.control}
+          name="tipoServico"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tipo de Serviço</FormLabel>
+              <FormControl>
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => field.onChange(value)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione o tipo de serviço" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Corte">Corte</SelectItem>
+                    <SelectItem value="Barba">Barba</SelectItem>
+                    <SelectItem value="Corte e Barba">Corte e Barba</SelectItem>
+                    <SelectItem value="Sobrancelha">Sobrancelha</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormDescription>
+                Selecione o tipo de serviço desejado
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit">Agendar</Button>
       </form>
     </Form>
   );

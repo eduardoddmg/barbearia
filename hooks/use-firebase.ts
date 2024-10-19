@@ -1,23 +1,23 @@
+import { create } from 'zustand';
 import { getAllItems } from '@/firebase';
 import { DocumentData } from 'firebase/firestore';
-import React from 'react';
 
-export const useFirebase = () => {
-  const [data, setData] = React.useState<DocumentData[]>([]);
+// Definindo a interface para o tipo de estado
+interface FirebaseState {
+  data: DocumentData[]; // Estado inicial de dados
+  fetchData: () => Promise<void>; // Função para buscar dados
+}
 
-  const fetchData = async () => {
+// Criando o store Zustand
+export const useFirebaseStore = create<FirebaseState>((set) => ({
+  data: [], // Inicializa o estado como um array vazio
+  fetchData: async () => {
     console.log('cheguei aqui');
     try {
       const items = await getAllItems('items');
-      setData(items);
+      set({ data: items }); // Atualiza o estado com os itens obtidos
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     }
-  };
-
-  React.useEffect(() => {
-    fetchData();
-  }, []);
-
-  return { fetchData, data };
-};
+  },
+}));

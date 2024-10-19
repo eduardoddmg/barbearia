@@ -5,13 +5,14 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AddClient } from './dialog-add';
-import { useFirebase } from '@/hooks/use-firebase';
+import { useFirebaseStore } from '@/hooks/use-firebase';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
+import { SheetAdd } from './sheet-add';
 
 const Page = () => {
   const { status } = useSession();
-  const { data: items, fetchData } = useFirebase();
+  const { fetchData } = useFirebaseStore();
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   const router = useRouter();
@@ -36,8 +37,9 @@ const Page = () => {
   return (
     <div>
       <Button onClick={() => fetchData()}>Atualizar</Button>
-      <AddClient fetchData={fetchData} />
-      <DataTableDemo data={items} fetchData={fetchData} />
+      <AddClient />
+      <SheetAdd />
+      <DataTableDemo />
       <Calendar
         mode="single"
         selected={date}

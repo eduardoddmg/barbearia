@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { addItem } from '@/firebase';
 import { ClientForm } from './form'; // Importe o ClientForm aqui
+import { useFirebaseStore } from '@/hooks/use-firebase';
 
 interface dataProps {
   nome: string;
@@ -21,9 +22,10 @@ interface dataProps {
   telefone: string;
 }
 
-export function AddClient({ fetchData }: { fetchData: () => void }) {
+export function AddClient() {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const { fetchData } = useFirebaseStore();
 
   async function handleSubmit(data: dataProps) {
     // ADICIONAR O CLIENTE NO BANCO DE DADOS COM FIREBASE
@@ -56,7 +58,7 @@ export function AddClient({ fetchData }: { fetchData: () => void }) {
           Adicionar cliente na fila
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] w-full max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Adicionar cliente</DialogTitle>
           <DialogDescription>

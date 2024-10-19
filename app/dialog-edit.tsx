@@ -10,7 +10,7 @@ import {
 import { editItem } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import { ClientForm } from './form';
-import { useFirebase } from '@/hooks/use-firebase';
+import { useFirebaseStore } from '@/hooks/use-firebase';
 
 interface dataProps {
   nome: string;
@@ -31,7 +31,7 @@ export function EditClient({
   id: string;
 }) {
   const { toast } = useToast();
-  const { data } = useFirebase();
+  const { data } = useFirebaseStore();
   const item = data.filter((item) => item.id === id)[0];
 
   async function onSubmit(data: dataProps) {

@@ -38,6 +38,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
     "react-input-mask": "^2.0.4",
+    "recharts": "^2.13.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "use-mask-input": "^3.4.0",

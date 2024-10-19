@@ -59,8 +59,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
-            <div className="p-4">{children}</div>
+            <div className="max-w-7xl m-auto">
+              <Navbar />
+              <div className="p-4">{children}</div>
+            </div>
           </ThemeProvider>
         </Providers>
         <Toaster />

@@ -3,17 +3,17 @@
 import { DataTableDemo } from './table';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { AddClient } from './dialog-add';
 import { useFirebaseStore } from '@/hooks/use-firebase';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import { SheetAdd } from './sheet-add';
+import { CardsAgendamento } from './card-agendamento';
+import { ChartDonut } from './chart-donut';
+import { ChartRadar } from './chart-radar';
 
 const Page = () => {
   const { status } = useSession();
-  const { fetchData } = useFirebaseStore();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const { fetchData, loading } = useFirebaseStore();
 
   const router = useRouter();
 
@@ -36,16 +36,16 @@ const Page = () => {
 
   return (
     <div>
-      <Button onClick={() => fetchData()}>Atualizar</Button>
+      <Button onClick={() => fetchData()} disabled={loading}>
+        {loading ? 'Carregando' : 'Atualizar'}
+      </Button>
       <AddClient />
-      <SheetAdd />
       <DataTableDemo />
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-md border shadow"
-      />
+      <div className="flex lg:flex-row sm:flex-col lg:space-x-5 sm:space-y-5 justify-between items-stretch">
+        <CardsAgendamento />
+        <ChartDonut />
+        <ChartRadar />
+      </div>
     </div>
   );
 };

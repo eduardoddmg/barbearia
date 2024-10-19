@@ -26,7 +26,7 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 const FormSchema = z.object({
@@ -43,11 +43,20 @@ export default function Login() {
   const { toast } = useToast();
   const router = useRouter();
 
+  const { status } = useSession();
+
+  React.useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/');
+      return;
+    }
+  }, [status, router]);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'eduardoddmg@gmail.com',
+      password: '12345678',
     },
   });
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -114,7 +123,9 @@ export default function Login() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Enviar</Button>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? 'Carregando...' : 'Enviar'}
+            </Button>
           </form>
         </Form>
       </CardContent>

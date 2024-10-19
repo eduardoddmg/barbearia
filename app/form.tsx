@@ -22,7 +22,6 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { withMask } from 'use-mask-input';
-import { useEffect } from 'react';
 import { DocumentData } from 'firebase/firestore';
 
 // Esquema de validação do formulário
@@ -36,24 +35,14 @@ const formSchema = z.object({
 
 interface ClientFormProps {
   onSubmit: (data: z.infer<typeof formSchema>) => void;
-  defaultValues?: DocumentData;
+  defaultValues?: DocumentData | { tipoServico: string } | undefined;
 }
 
 export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      nome: '',
-      data: '',
-      horario: '',
-      telefone: '',
-      tipoServico: '',
-    },
+    defaultValues: defaultValues,
   });
-
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form]);
 
   return (
     <Form {...form}>
@@ -138,8 +127,8 @@ export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
               <FormLabel>Tipo de Serviço</FormLabel>
               <FormControl>
                 <Select
-                  value={field.value}
-                  onValueChange={(value) => field.onChange(value)}
+                  onValueChange={field.onChange} // Define o valor selecionado
+                  {...field}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Selecione o tipo de serviço" />
@@ -160,7 +149,9 @@ export function ClientForm({ onSubmit, defaultValues }: ClientFormProps) {
           )}
         />
 
-        <Button type="submit">Agendar</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? 'Carregando...' : 'Agendar'}
+        </Button>
       </form>
     </Form>
   );

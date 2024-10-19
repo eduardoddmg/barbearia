@@ -60,7 +60,7 @@ export function EditClient({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-h-[90vh] w-full max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Adicionar cliente</DialogTitle>
           <DialogDescription>

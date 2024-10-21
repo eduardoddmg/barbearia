@@ -28,6 +28,7 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 const FormSchema = z.object({
   // Email com validação
@@ -47,7 +48,7 @@ export default function Login() {
 
   React.useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/');
+      router.push('/app');
       return;
     }
   }, [status, router]);
@@ -78,7 +79,7 @@ export default function Login() {
         description: 'You have been successfully logged in.',
         className: 'bg-green-500 text-white',
       });
-      router.push('/'); // Redireciona o usuário para o dashboard após o login
+      router.push('/app'); // Redireciona o usuário para o dashboard após o login
     }
   }
 
@@ -124,7 +125,14 @@ export default function Login() {
               )}
             />
             <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? 'Carregando...' : 'Enviar'}
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Carregando...
+                </>
+              ) : (
+                'Enviar'
+              )}
             </Button>
           </form>
         </Form>

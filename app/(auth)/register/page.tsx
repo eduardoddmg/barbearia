@@ -28,6 +28,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const FormSchema = z.object({
   // Email com validação
@@ -41,6 +43,16 @@ const FormSchema = z.object({
 
 export default function Register() {
   const { toast } = useToast();
+
+  const { status } = useSession();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/app');
+      return;
+    }
+  }, [status, router]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

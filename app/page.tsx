@@ -1,10 +1,12 @@
+'use client';
+
+import { ThumbsUpIcon, ZapIcon } from 'lucide-react';
+
 import {
-  BrainCogIcon,
-  PackageIcon,
-  ThumbsUpIcon,
-  TrophyIcon,
-  UsersIcon,
-  ZapIcon,
+  CalendarIcon,
+  ScissorsIcon,
+  ShieldCheckIcon,
+  UserIcon,
 } from 'lucide-react';
 import Image from 'next/image';
 import PricingSectionCards from './pricing';
@@ -43,100 +45,96 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       {/* SEÇÃO DE BENEFÍCIOS */}
       <div className="container py-24 lg:py-32">
         <div className="max-w-4xl mx-auto">
           {/* Grid */}
           <div className="grid md:grid-cols-2 gap-6 lg:gap-12">
             <div className="space-y-6 lg:space-y-10">
-              {/* Icon Block */}
+              {/* Benefício 1 */}
               <div className="flex">
-                <BrainCogIcon className="flex-shrink-0 mt-2 h-8 w-8" />
+                <CalendarIcon className="flex-shrink-0 mt-2 h-8 w-8" />
                 <div className="ms-5 sm:ms-8">
                   <h3 className="text-base sm:text-lg font-semibold">
-                    Creative minds
+                    Agendamentos Rápidos
                   </h3>
                   <p className="mt-1 text-muted-foreground">
-                    We choose our teams carefully. Our people are the secret to
-                    great work.
+                    Agende cortes de forma rápida e eficiente, mantendo um
+                    controle preciso sobre a agenda de cada barbeiro.
                   </p>
                 </div>
               </div>
-              {/* End Icon Block */}
-              {/* Icon Block */}
+              {/* Benefício 2 */}
               <div className="flex">
-                <PackageIcon className="flex-shrink-0 mt-2 h-8 w-8" />
+                <UserIcon className="flex-shrink-0 mt-2 h-8 w-8" />
                 <div className="ms-5 sm:ms-8">
                   <h3 className="text-base sm:text-lg font-semibold">
-                    Effortless updates
+                    Gestão de Clientes
                   </h3>
                   <p className="mt-1 text-muted-foreground">
-                    Benefit from automatic updates to all boards any time you
-                    need to make a change to your website.
+                    Mantenha o cadastro de seus clientes organizado, com
+                    histórico de agendamentos e preferências salvas.
                   </p>
                 </div>
               </div>
-              {/* End Icon Block */}
-              {/* Icon Block */}
+              {/* Benefício 3 */}
+              <div className="flex">
+                <ShieldCheckIcon className="flex-shrink-0 mt-2 h-8 w-8" />
+                <div className="ms-5 sm:ms-8">
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    Segurança de Dados
+                  </h3>
+                  <p className="mt-1 text-muted-foreground">
+                    Todas as informações são protegidas com a mais alta
+                    segurança, garantindo a privacidade de seus clientes.
+                  </p>
+                </div>
+              </div>
+            </div>
+            {/* Coluna 2 */}
+            <div className="space-y-6 lg:space-y-10">
+              {/* Benefício 4 */}
+              <div className="flex">
+                <ScissorsIcon className="flex-shrink-0 mt-2 h-8 w-8" />
+                <div className="ms-5 sm:ms-8">
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    Agendamentos de Cortes
+                  </h3>
+                  <p className="mt-1 text-muted-foreground">
+                    Organize agendamentos de cortes de cabelo, barba e
+                    tratamentos especiais com facilidade.
+                  </p>
+                </div>
+              </div>
+              {/* Benefício 5 */}
               <div className="flex">
                 <ZapIcon className="flex-shrink-0 mt-2 h-8 w-8" />
                 <div className="ms-5 sm:ms-8">
                   <h3 className="text-base sm:text-lg font-semibold">
-                    Strong empathy
+                    Notificações Instantâneas
                   </h3>
                   <p className="mt-1 text-muted-foreground">
-                    We&apos;ve user tested our own process by shipping over 1k
-                    products for clients.
+                    Receba notificações automáticas para cada agendamento e
+                    mantenha seus clientes atualizados.
                   </p>
                 </div>
               </div>
-              {/* End Icon Block */}
-            </div>
-            {/* End Col */}
-            <div className="space-y-6 lg:space-y-10">
-              {/* Icon Block */}
-              <div className="flex">
-                <TrophyIcon className="flex-shrink-0 mt-2 h-8 w-8" />
-                <div className="ms-5 sm:ms-8">
-                  <h3 className="text-base sm:text-lg font-semibold">
-                    Conquer the best
-                  </h3>
-                  <p className="mt-1 text-muted-foreground">
-                    We stay lean and help your product do one thing well.
-                  </p>
-                </div>
-              </div>
-              {/* End Icon Block */}
-              {/* Icon Block */}
-              <div className="flex">
-                <UsersIcon className="flex-shrink-0 mt-2 h-8 w-8" />
-                <div className="ms-5 sm:ms-8">
-                  <h3 className="text-base sm:text-lg font-semibold">
-                    Designing for people
-                  </h3>
-                  <p className="mt-1 text-muted-foreground">
-                    We actively pursue the right balance between functionality
-                    and aesthetics, creating delightful experiences.
-                  </p>
-                </div>
-              </div>
-              {/* End Icon Block */}
-              {/* Icon Block */}
+              {/* Benefício 6 */}
               <div className="flex">
                 <ThumbsUpIcon className="flex-shrink-0 mt-2 h-8 w-8" />
                 <div className="ms-5 sm:ms-8">
                   <h3 className="text-base sm:text-lg font-semibold">
-                    Simple and affordable
+                    Simples e Eficiente
                   </h3>
                   <p className="mt-1 text-muted-foreground">
-                    From boarding passes to movie tickets, there&apos;s pretty
-                    much nothing you can&apos;t do.
+                    Fácil de usar, com interface intuitiva que otimiza o tempo
+                    do barbeiro e melhora o atendimento.
                   </p>
                 </div>
               </div>
-              {/* End Icon Block */}
             </div>
-            {/* End Col */}
+            {/* End Coluna 2 */}
           </div>
           {/* End Grid */}
         </div>
@@ -145,6 +143,21 @@ const Page = () => {
       {/* SEÇÃO DE PREÇOS */}
       <PricingSectionCards />
       {/* SEÇÃO DE FOOTER */}
+      <footer className="w-full py-4">
+        <div className="container mx-auto text-center">
+          <p className="text-sm text-muted-foreground">
+            Desenvolvido por{' '}
+            <a
+              href="https://github.com/eduardoddmg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-primary/80"
+            >
+              Eduardo Melo
+            </a>
+          </p>
+        </div>
+      </footer>
     </main>
   );
 };

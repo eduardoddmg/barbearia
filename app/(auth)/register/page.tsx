@@ -28,7 +28,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'; // Método para 
 import { auth } from '@/firebase'; // Configuração do Firebase
 import { useToast } from '@/hooks/use-toast'; // Hook para exibir notificações
 import Link from 'next/link';
-import { useSession } from 'next-auth/react'; // Hook para acessar o estado da sessão
+import { signIn, useSession } from 'next-auth/react'; // Funções para autenticação com NextAuth
 import { useRouter } from 'next/navigation'; // Hook para navegação
 
 // Define o esquema de validação usando Zod
@@ -68,10 +68,8 @@ export default function Register() {
 
   // Função executada no envio do formulário
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
-
-    // Registro de usuário no Firebase
     try {
+      // Registro de usuário no Firebase
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
@@ -79,20 +77,30 @@ export default function Register() {
       );
       const user = userCredential.user; // Obtém o usuário recém-criado
 
-      // Exibe uma mensagem de sucesso ao usuário
-      toast({
-        title: 'Registro efetuado com sucesso!', // Mensagem em português
-        description: `Bem-vindo, ${user.email}`,
+      // Faz o login automático com o NextAuth após o registro
+      const signInResult = await signIn('credentials', {
+        redirect: false,
+        email: data.email,
+        password: data.password,
       });
 
-      // Opcional: redireciona o usuário para a página principal após o registro
-      router.push('/app');
+      // Verifica se o login foi bem-sucedido
+      if (signInResult?.ok) {
+        toast({
+          title: 'Registro e login bem-sucedidos!', // Mensagem em português
+          description: `Bem-vindo, ${user.email}`,
+          className: 'bg-green-500 text-white',
+        });
+        router.push('/app'); // Redireciona o usuário para a página principal após o login
+      } else {
+        throw new Error('Erro no login após o registro');
+      }
     } catch (e) {
-      console.log(e);
+      console.error(e);
 
       // Exibe uma mensagem de erro ao usuário
       toast({
-        title: 'Falha no registro', // Mensagem em português
+        title: 'Falha no registro ou login', // Mensagem em português
         description:
           'Aconteceu algum erro durante a criação de sua conta. Por favor, tente de novo.',
         variant: 'destructive', // Estilo de erro para o toast
@@ -150,7 +158,9 @@ export default function Register() {
               )}
             />
             {/* Botão de enviar */}
-            <Button type="submit">Enviar</Button>
+            <Button type="submit" isLoading={form.formState.isSubmitting}>
+              Enviar
+            </Button>
           </form>
         </Form>
       </CardContent>

@@ -28,7 +28,6 @@ import { useToast } from '@/hooks/use-toast'; // Hook personalizado para toasts 
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react'; // Funções para autenticação com NextAuth
 import { useRouter } from 'next/navigation'; // Hook para navegação
-import { Loader2 } from 'lucide-react'; // Ícone de carregamento
 
 // Define o esquema de validação usando Zod
 const FormSchema = z.object({
@@ -93,7 +92,7 @@ export default function Login() {
 
   return (
     // Card do formulário de login
-    <Card className="w-[500px] mx-auto my-20">
+    <Card className="w-[500px] mx-auto my-20 flex flex-col">
       <CardHeader>
         <CardTitle>Login</CardTitle>
         <CardDescription>
@@ -136,20 +135,21 @@ export default function Login() {
                 </FormItem>
               )}
             />
+            {/* Botão de Esqueceu a sua senha */}
+            <div className="w-full flex justify-start">
+              <Button asChild variant="link" className="p-0">
+                <Link href="/forgot-password">Esqueceu a sua senha?</Link>
+              </Button>
+            </div>
+
             {/* Botão de enviar */}
-            <Button type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Carregando... {/* Indicador de carregamento */}
-                </>
-              ) : (
-                'Enviar' // Texto do botão
-              )}
+            <Button type="submit" isLoading={form.formState.isSubmitting}>
+              Enviar
             </Button>
           </form>
         </Form>
       </CardContent>
+      {/* FOOTER DO CARD */}
       <CardFooter>
         {/* Link para criar uma nova conta */}
         <Button asChild variant="link" className="w-full">

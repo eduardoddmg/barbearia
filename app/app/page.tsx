@@ -27,7 +27,11 @@ const Page = () => {
 
   // Quando a sessão está carregando
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loader2 />
+      </div>
+    );
   }
 
   // Se a sessão não estiver autenticada, redireciona para a página de login
@@ -37,15 +41,8 @@ const Page = () => {
 
   return (
     <div>
-      <Button onClick={() => fetchData()} disabled={loading}>
-        {loading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Carregando
-          </>
-        ) : (
-          'Atualizar'
-        )}
+      <Button onClick={() => fetchData()} isLoading={loading}>
+        Atualizar
       </Button>
       <AddClient />
       <DataTableDemo />

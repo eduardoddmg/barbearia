@@ -6,15 +6,12 @@ import {
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   Table as ReactTable,
-  HeaderGroup,
-  Row,
 } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -35,14 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table } from '@/components/ui/table';
 import { removeOneItem } from '@/firebase';
 import { DocumentData } from 'firebase/firestore';
 import { EditClient } from './dialog-edit';
@@ -57,6 +47,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { TableHeaderComponent } from '@/components/table/table-header';
+import { TableBodyComponent } from '@/components/table/table-body';
 
 // Tipagem para o Cliente
 export type Cliente = {
@@ -88,58 +80,6 @@ interface ActionMenuProps {
   setId: React.Dispatch<React.SetStateAction<string>>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   fetchData: () => void;
-}
-
-// Component: TableHeader
-function TableHeaderComponent({ table }: TableProps) {
-  return (
-    <TableHeader>
-      {table
-        .getHeaderGroups()
-        .map((headerGroup: HeaderGroup<Cliente | DocumentData>) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-    </TableHeader>
-  );
-}
-
-// Component: TableBody
-function TableBodyComponent({
-  table,
-  columns,
-}: TableProps & { columns: ColumnDef<Cliente | DocumentData>[] }) {
-  return (
-    <TableBody>
-      {table.getRowModel().rows?.length ? (
-        table.getRowModel().rows.map((row: Row<Cliente | DocumentData>) => (
-          <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))
-      ) : (
-        <TableRow>
-          <TableCell colSpan={columns.length} className="h-24 text-center">
-            Nenhum resultado
-          </TableCell>
-        </TableRow>
-      )}
-    </TableBody>
-  );
 }
 
 // Component: ActionMenu

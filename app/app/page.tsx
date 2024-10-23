@@ -16,6 +16,8 @@ const Page = () => {
   const { status } = useSession();
   const { fetchData, loading } = useFirebaseStore();
 
+  console.log(loading); // Debugar o loading
+
   const router = useRouter();
 
   useEffect(() => {

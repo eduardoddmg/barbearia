@@ -1,6 +1,14 @@
 'use client'; // Indica que este componente será renderizado no lado do cliente
 
 import * as React from 'react';
+import { useState } from 'react'; // Importa o hook useState
+import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Hook para navegação
+import { signIn, useSession } from 'next-auth/react'; // Funções para autenticação com NextAuth
+import { useForm } from 'react-hook-form'; // Biblioteca para gerenciar formulários
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod'; // Biblioteca de validação de esquema
+import { Eye, EyeOff, Loader2 } from 'lucide-react'; // Importa os ícones
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,14 +28,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod'; // Biblioteca de validação de esquema
-import { useForm } from 'react-hook-form'; // Biblioteca para gerenciar formulários
 import { useToast } from '@/hooks/use-toast'; // Hook personalizado para toasts (notificações)
-import Link from 'next/link';
-import { signIn, useSession } from 'next-auth/react'; // Funções para autenticação com NextAuth
-import { useRouter } from 'next/navigation'; // Hook para navegação
 
 // Define o esquema de validação usando Zod
 const FormSchema = z.object({
@@ -44,8 +45,10 @@ const FormSchema = z.object({
 export default function Login() {
   const { toast } = useToast(); // Hook para exibir notificações (toasts)
   const router = useRouter(); // Hook para navegação
-
   const { status } = useSession(); // Estado da sessão do usuário
+
+  // NOVO: Estado para controlar a visibilidade da senha
+  const [showPassword, setShowPassword] = useState(false);
 
   React.useEffect(() => {
     if (status === 'authenticated') {
@@ -63,6 +66,10 @@ export default function Login() {
       password: '12345678', // Valor padrão para teste
     },
   });
+
+  const {
+    formState: { isSubmitting },
+  } = form; // Extrai o estado de 'isSubmitting'
 
   // Função executada no envio do formulário
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -121,16 +128,36 @@ export default function Login() {
                 </FormItem>
               )}
             />
-            {/* Campo de senha */}
+            {/* Campo de senha com ícone para ver/ocultar */}
             <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="*********" {...field} />
-                  </FormControl>
+                  {/* Container relativo para posicionar o ícone */}
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        // Alterna o tipo do input baseado no estado 'showPassword'
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="*********"
+                        {...field}
+                        className="pr-10" // Adiciona padding para não sobrepor o ícone
+                      />
+                    </FormControl>
+                    {/* Ícone que alterna a visibilidade */}
+                    <div
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
+                  </div>
                   <FormMessage /> {/* Mensagem de erro se houver */}
                 </FormItem>
               )}
@@ -142,9 +169,16 @@ export default function Login() {
               </Button>
             </div>
 
-            {/* Botão de enviar */}
-            <Button type="submit" isLoading={form.formState.isSubmitting}>
-              Enviar
+            {/* Botão de enviar com estado de loading */}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Entrando...
+                </>
+              ) : (
+                'Entrar'
+              )}
             </Button>
           </form>
         </Form>
